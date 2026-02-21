@@ -360,6 +360,10 @@ class KeplerianElements():
     def determine_new_velocity(self, f_dot, g_dot):
         '''Determine the new velocity vector at a new delta-v'''
         return np.array(self.perifocal_positions) * f_dot + np.array(self.velocity_components) * g_dot
+    
+    def determine_arbitrary_new_velocity(self, f_dot, g_dot, current_position, velocity_components):
+        '''Determine the new velocity vector at a new delta-v'''
+        return np.array(current_position) * f_dot + np.array(velocity_components) * g_dot
 
     def determine_new_position(self, f, g):
         '''Determine the new position vector at a new delta-v'''

@@ -49,6 +49,7 @@ def main():
     cur_vel = ke1.r_dot_vector
 
     fg_table = []
+    diff_table = []
 
     for i in range(0, 10):
         loc, perigee_passes = ke1.determine_location_after_n_seconds(vector_data['vectors'][f'vector1']['step_size'], math.degrees(cur_nu))
@@ -57,15 +58,17 @@ def main():
         g_dot = ke1.determine_g_dot(math.degrees(loc))
         f_dot = ke1.determine_f_dot_new(f, g, g_dot)
 
-        cur_pos = ke1.determine_new_position(f, g)
-        cur_vel = ke1.determine_new_velocity(f_dot, g_dot)
+        new_pos = ke1.determine_arbitrary_new_position(f, g, cur_pos, cur_vel)
+        new_vel = ke1.determine_arbitrary_new_velocity(f_dot, g_dot, cur_pos, cur_vel)
 
         current_step = vector_data['vectors'][f'vector1']['step_size']*(i+1)
-        table_entry = [current_step, cur_pos[0], cur_pos[1], cur_pos[2], cur_vel[0], cur_vel[1], cur_vel[2]]
+        table_entry = [current_step, new_pos[0], new_pos[1], new_pos[2], new_vel[0], new_vel[1], new_vel[2]]
 
         fg_table.append(table_entry)
 
         cur_nu = loc
+        cur_pos = new_pos
+        cur_vel = new_vel
 
 
     print('f and g Positions and Velocities')
