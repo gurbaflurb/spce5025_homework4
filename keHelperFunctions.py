@@ -10,6 +10,8 @@ def read_in_yaml(file_name):
         data = yaml.load(f.read(), Loader=yaml.SafeLoader)
         return data
 
+
+
 def convert_arbitrary_perifocal_to_eci(a, e, inclination, raan, aop, nu) -> tuple:
         '''Converts manually provided perifocal values to ECI coordinates. Uses radians and not degrees. Passing in degrees will mess up the calculation'''
 
@@ -20,6 +22,8 @@ def convert_arbitrary_perifocal_to_eci(a, e, inclination, raan, aop, nu) -> tupl
 
         return (x, y, z)
 
+
+
 def find_arbitrary_position_and_velocity_vector(a: float, eccentricity: float, nu: float) -> tuple:
     '''Returns a tuple in the form position_vector, velocity_vector'''
     mu = 398600441800000.0 # From WGS84
@@ -29,6 +33,8 @@ def find_arbitrary_position_and_velocity_vector(a: float, eccentricity: float, n
 
     return ([radius*math.cos(nu), radius*math.sin(nu), 0.0],
             [-math.sqrt(mu/perifocal)*math.sin(nu), math.sqrt(mu/perifocal)*(eccentricity+math.cos(nu)), 0.0])
+
+
 
 def keplarian_rk4(r_vector, r_dot_vector, step, mu):
      '''Takes in the position vector (r_vector), velocity vector (r_dot_vector), r (norm of r_vector), step (Size of step between each round), and mu (Probably from WGS 84).
@@ -94,6 +100,8 @@ def keplarian_rk4(r_vector, r_dot_vector, step, mu):
 
      return (step_position_solution, step_velocity_solution)
 
+
+
 def keplarian_rk4_oblate_earth(r_vector, r_dot_vector, step):
      '''Takes into account the Earth is Oblate. Takes in the position vector (r_vector), velocity vector (r_dot_vector), r (norm of r_vector), and step (Size of step between each round)
      Mu in this case is not provided by the user but instead defined by the WGS 84 standard for this specific implementation.'''
@@ -146,13 +154,18 @@ def keplarian_rk4_oblate_earth(r_vector, r_dot_vector, step):
 #      print(f'Norm of r: {ranorm}')
 #      print()
 
-     # Given on slide 24
-     rbnorm = np.linalg.norm(r_b)
-     rd_c_pt = (-mu/math.pow(rbnorm, 3))*r_b
+     # K3
+     r = math.sqrt(math.pow(r_b[0], 2) + math.pow(r_b[1], 2) + math.pow(r_b[2], 2))
+
+     c_pt_s = r_b[2]/r
+     c_pt_1 = -(mu/math.pow(r, 3))
+     c_pt_2 = (1+((3*earth_j2)/2)*math.pow(earth_radius/r, 2)*(1-5*math.pow(c_pt_s, 2)))*r_b
+     
+     a = c_pt_1 * c_pt_2
 
      r_c = r_vector+(step)*rd_b # These are wrong on slide 24, we multiply by the step instead of step / 2
-     rd_c = r_dot_vector+(step)*rd_c_pt # These are wrong on slide 24, we multiply by the step instead of step / 2
-     k3 = [rd_b, rd_c_pt]
+     rd_c = r_dot_vector+(step)*a # These are wrong on slide 24, we multiply by the step instead of step / 2
+     k3 = [rd_b, a]
 
 #      print(f'k3  : {k3[0]}')
 #      print(f'k3 a: {k3[1]}')
@@ -161,9 +174,17 @@ def keplarian_rk4_oblate_earth(r_vector, r_dot_vector, step):
 #      print(f'Norm of r: {rbnorm}')
 #      print()
 
-
+     # K4
      # Given on slide 25
-     k4 = [rd_c, (-mu/math.pow(np.linalg.norm(r_c), 3))*r_c]
+     r = math.sqrt(math.pow(r_c[0], 2) + math.pow(r_c[1], 2) + math.pow(r_c[2], 2))
+
+     d_pt_s = r_c[2]/r
+     d_pt_1 = -(mu/math.pow(r, 3))
+     d_pt_2 = (1+((3*earth_j2)/2)*math.pow(earth_radius/r, 2)*(1-5*math.pow(d_pt_s, 2)))*r_c
+     
+     a = d_pt_1 * d_pt_2
+
+     k4 = [rd_c, a]
 #      print(f'k4  : {k4[0]}')
 #      print(f'k4 a: {k4[1]}')
 #      print()

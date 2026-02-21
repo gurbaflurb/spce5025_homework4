@@ -217,8 +217,8 @@ class KeplerianElements():
 
     def determine_location_after_n_seconds(self, seconds, nu):
         '''Implemented with Keplers Equation, Nu is expected in degrees'''
-        #cur_E0 = math.radians(nu)
-        cur_E0 = self.mean_anomaly
+        cur_E0 = math.radians(nu)
+        #cur_E0 = self.mean_anomaly
 
         for i in range(0,10000):
             cur_E0 = cur_E0 + (self.mean_motion * seconds + self.mean_anomaly - (cur_E0 - self.eccentricity * math.sin(cur_E0)))/(1 - self.eccentricity * math.cos(cur_E0))

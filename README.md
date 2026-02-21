@@ -1,29 +1,18 @@
-SPCE 5025 - Homework 3
+SPCE 5025 - Homework 4
 
-Using Homework 2 as a base, and extending it to meet homework 3 requirements
+Using previous homeworks as a base, and extending it to meet homework 4 requirements
 
-Homework 2: https://github.com/gurbaflurb/spce5025_homework2
+Takes in a provided set of vectors, one for the position, and one for the velocity of a satellite, and now a step size. This then calculates the following:
 
-Takes in a provided set of vectors, one for the position, and one for the velocity of a satellite. This then calculates the following:
+# Problem 1
+- Applies RK4 to estimate the change in position and velocity 10 times with a step size of 60
+- Applies the f and g functions to the same initial position and velocity 10 times and compares to RK4 results
+- Changes the units to Earth Radii and Hours and then re-performs RK4
 
-# First Vector
-- Computes and outputs all 6 keplarian elements
-- Computes the ECI -> UVW transformation
-- Shows that the transform multiplied by vector r1 - transform multiplied by vector r2 = the transform multiplied by (r1 - r2)
+# Problem 2
+- Applies RK4 to estimate the change in position and velocity 10 times with a step size of 60
+- Instead of using meters per second (Like in problem 1), instead converts units to Earth Radii per hour
 
-
-# Second Vector
-- Computes and outputs all 6 keplarian elements
-
-# Inverse Question
-Given the following keplarian elements, compute the corresponding ECI position and velocity vectors
-- semi-major axis: 7800000.0 meters
-- eccentricity: 0.001
-- inclination: 98.6 degrees
-- RAAN: 30.0 degrees
-- argument of periapsis: 40 degrees
-- nu: 30.087853 degrees
-
-
-
-As usual, I've pre staged all the provided vectors into a single yaml file to streamline things.
+# Output
+Outputs tables with the step in seconds, the X, Y, and Z coordinates, and the Ẋ (aka XD), ẏ (aka YD), and Ż (aka ZD)
+ 
