@@ -64,7 +64,23 @@ def main():
         current_step = vector_data['vectors'][f'vector1']['step_size']*(i+1)
         table_entry = [current_step, new_pos[0], new_pos[1], new_pos[2], new_vel[0], new_vel[1], new_vel[2]]
 
+        
+        
+        
+        
+        
+        
+
+        diff_entry = [current_step,
+                      new_pos[0] - p1_table[i][1],
+                      new_pos[1] - p1_table[i][2],
+                      new_pos[2] - p1_table[i][3],
+                      new_vel[0] - p1_table[i][4],
+                      new_vel[1] - p1_table[i][5],
+                      new_vel[2] - p1_table[i][6]]
+
         fg_table.append(table_entry)
+        diff_table.append(diff_entry)
 
         cur_nu = loc
         cur_pos = new_pos
@@ -74,7 +90,10 @@ def main():
     print('f and g Positions and Velocities')
     print(tabulate.tabulate(fg_table, headers=['Step (Seconds)', 'X', 'Y', 'Z', 'XD', 'YD', 'ZD'], floatfmt=".8f"))
     print()
-    exit(0)
+
+    print('Differences table')
+    print(tabulate.tabulate(diff_table, headers=['Step (Seconds)', 'X', 'Y', 'Z', 'XD', 'YD', 'ZD'], floatfmt=".8f"))
+    print()
 
     
     # Redo RK4 integration using units of Earth Radii and Hours
